@@ -72,39 +72,34 @@ struct data_Matricula
 /* Tipos a serem verificados na abertura do arquivo a fim de carregamentos dos dados existentes*/
 enum tipo {aluno=0, disciplina, matricula};
 
+
 /* Mostra o dia no sistema */
-void show_time()
-{
-    SYSTEMTIME time;
-    GetSystemTime(&time);
-    cout << time.wDay << "/" << time.wMonth << "/" << time.wYear << endl;
-}
+    void show_time()
+    {
+        SYSTEMTIME time;
+        GetSystemTime(&time);
+        cout << time.wDay << "/" << time.wMonth << "/" << time.wYear << endl;
+    }
+
+void title()
+    {
+        cout << PRESENT << " "; show_time();
+    }
 
 /* Classe de funções de inserção de dados com sobrecarga de funções*/
 class Data_In
 {
     public:
-        data_Aluno* line(data_Aluno* aluno, string cod, string nome, string CPF)
+        data_Aluno* begin_Al()
         {
-    
-            data_Aluno* node = new data_Aluno;
-
-            node->next=NULL;
-            node->cod=cod;
-            node->nome=nome;
-            node->CPF=CPF;
-
-            if(aluno)
-            {
-                aluno->next=node;
-            }
-
-            return aluno ? aluno : node; 
+            return line(NULL, "", "", "");
         }
+               
 
         void newline(data_Aluno* lista)
         {
             system("cls");
+            title();
             cout << "Cadastro de Alunos" << endl;
             cout << "Insira abaixo o Codigo, Nome e o CPF." << endl;
             string codigo, nome, CPF;
@@ -122,9 +117,29 @@ class Data_In
             system ("cls");
         }
 
+        /* Carrega o arquivo binário na memória*/
         void chargelines (string nome_arquivo)
         {
             ofstream arquivo(nome_arquivo, ios::out | ios:: binary);
+        }
+
+    private:
+        data_Aluno* line(data_Aluno* aluno, string cod, string nome, string CPF)
+        {
+    
+            data_Aluno* node = new data_Aluno;
+
+            node->next=NULL;
+            node->cod=cod;
+            node->nome=nome;
+            node->CPF=CPF;
+
+            if(aluno)
+            {
+                aluno->next=node;
+            }
+
+            return aluno ? aluno : node; 
         }
 };
 
@@ -134,9 +149,11 @@ class Data_In
 class Menu
 {
     public:
+    
+
     void display()
     {
-        cout << PRESENT << " "; show_time();
+        title();
         cout << "[1] - Cadastrar aluno" << endl;
         cout << "[2] - Salvar" << endl;
         cout << "[3] - Sair" << endl << endl;
@@ -152,7 +169,7 @@ class Menu
     }
 
     private:
-    int operador;
+    int operador; 
 };
 
 int main()
@@ -162,7 +179,7 @@ int main()
     Menu menu;
     
     /*Alocação dinâmica das listas encadeadas*/
-    data_Aluno *lista = insert.line(NULL, "", "", "");
+    data_Aluno *lista = insert.begin_Al();
        
     /*carregando arquivos*/
     
@@ -177,6 +194,10 @@ int main()
 
         case 2: //salvar aluno
             
+            break;
+        
+        case 3: //sair
+            exit(1);
             break;
         
         default:
